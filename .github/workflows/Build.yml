@@ -27,15 +27,46 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build cmake
-     
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Cache CMake build
+        uses: actions/cache@v4
+        with:
+          path: app/.cxx
+          key: cmake-${{ runner.os }}-${{ hashFiles('CMakeLists.txt', '**/*.cpp', '**/*.h') }}
+          restore-keys: cmake-${{ runner.os }}-
+
       - name: Grant Execute Permission for Gradlew
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
         run: ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Generate Debug Keystore
+        run: |
+          keytool -genkeypair -v -keystore debug.keystore -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Sign APK
+        run: |
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore debug.keystore -storepass android \
+            app/build/outputs/apk/debug/app-debug.apk androiddebugkey
+
+      - name: Verify APK Signature
+        run: |
+          apksigner verify --verbose app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: RPCS3-Android-APK
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
