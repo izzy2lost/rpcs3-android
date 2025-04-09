@@ -4,16 +4,11 @@
 
 *An experimental [RPCS3](https://github.com/RPCS3/rpcs3) emulator port to Android*
 
-[![](https://img.shields.io/discord/1346565616336896091?color=5865F2&logo=discord&logoColor=white)](https://discord.gg/3PprUAVjfr)
+> **This project is discontinued. Alpha-7 is last release**  
+> Fork of RPCS3 is merged with [RPCSX](https://github.com/RPCSX/rpcsx-ui-android)  
+> RPCS3-Android is reuploaded as [RPCSX Android UI](https://github.com/RPCSX/rpcsx-ui-android)  
 
 </div>
-
-> **Warning**: Do not ask for link to games or system files. Piracy is not permitted on the GitHub nor in the Discord.
-
-
-## Contributing
-
-If you want to contribute as a developer, please contact us in the [Discord](https://discord.gg/3PprUAVjfr)
 
 ## Requirements
 
